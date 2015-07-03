@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 from django.http import HttpResponse
 from django.shortcuts import render
-from photos.models import Photo
+from photos.models import Photo, PUBLIC
 
 def home(request):
     """
@@ -11,7 +11,7 @@ def home(request):
     """
     # Recuperamos todos los objetos Photos (objects es objeto de clase ModelObject)
     # Aquí haría el SELECT * FROM photos, sin ejecutarlo
-    photos = Photo.objects.all().order_by('-created_at')
+    photos = Photo.objects.filter(visibility=PUBLIC).order_by('-created_at')
     context = {
         # Este es un parámetro de los que se pueden pasar al render, metidos en un diccionario
         #'photos_list': photos
