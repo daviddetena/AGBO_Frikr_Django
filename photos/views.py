@@ -10,12 +10,15 @@ def home(request):
     :return: objeto HttpResponse con un html que contiene las fotos
     """
     # Recuperamos todos los objetos Photos (objects es objeto de clase ModelObject)
-    photos = Photo.objects.all()
+    # Aquí haría el SELECT * FROM photos, sin ejecutarlo
+    photos = Photo.objects.all().order_by('-created_at')
+    context = {
+        # Este es un parámetro de los que se pueden pasar al render, metidos en un diccionario
+        #'photos_list': photos
+        # me quedo con las 5 primeras
+        # sólo aqui a ultima hora, cuando se utiliza, le añade al SELECT el LIMIT 5 y lo ejecuta
+        'photos_list': photos[:5]
+    }
 
-    html = '<ul>'
-    for photo in photos:
-        html += '<li>' + photo.name + '</li>'
-    html += '</ul>'
-
-    # Devolvemos en un HttpResponse el html creado
-    return HttpResponse(html)
+    # Devolvemos la plantilla a traves del render
+    return render(request, 'photos/home.html', context)
