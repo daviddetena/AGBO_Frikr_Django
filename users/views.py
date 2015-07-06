@@ -3,16 +3,36 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login as django_login, logout as django_logout, authenticate
 from users.forms import LoginForm
+from django.views.generic import View
 
-def login(request):
-    """
-    Comprobamos usuario
-    :param request:
-    :return:
-    """
 
-    error_messages = []
-    if request.method == 'POST':
+# Ahora tenemos el controlador basado en clase
+class LoginView(View):
+
+    def get(self, request):
+        """
+        Comprobamos usuario
+        :param request:
+        :return:
+        """
+        error_messages = []
+            # Por GET el formulario no existe
+        form = LoginForm()
+        context = {
+            'errors': error_messages,
+            'login_form': form
+        }
+        # Hacemos que el render tenga disponible el contexto con los datos que pasamos de error
+        return render(request, 'users/login.html', context)
+
+    def post(request):
+        """
+        Comprobamos usuario
+        :param request:
+        :return:
+        """
+
+        error_messages = []
         # Recoge todos los datos del post y los limpia
         form = LoginForm(request.POST)
 
@@ -38,15 +58,13 @@ def login(request):
                     return redirect(url)
                 else:
                     error_messages.append('El usuario no está activo')
-    else:
-        # Por GET el formulario no existe
-        form = LoginForm()
-    context = {
-        'errors': error_messages,
-        'login_form': form
-    }
-    # Hacemos que el render tenga disponible el contexto con los datos que pasamos de error
-    return render(request, 'users/login.html', context)
+
+        context = {
+            'errors': error_messages,
+            'login_form': form
+        }
+        # Hacemos que el render tenga disponible el contexto con los datos que pasamos de error
+        return render(request, 'users/login.html', context)
 
 def logout(request):
     # Desautenticamos usuario y redirigimos al home
