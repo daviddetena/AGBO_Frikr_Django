@@ -42,8 +42,9 @@ def detail(request, pk):
     except Photo.MultipleObjects:
         photo = None
     """
-    # buscamos por clave primaria (pk)
-    possible_photos = Photo.objects.filter(pk=pk)
+    # buscamos por clave primaria (pk), y también los elementos relacionados (en este caso el owner)
+    # con .prefetch_related() obtendriamos la inversa: obteniendo un owner, traer sus fotos de golpe
+    possible_photos = Photo.objects.filter(pk=pk).select_related('owner')
 
     # photo = (possible_photos.length ==1) ? posible_photos[0] : null;
     photo = possible_photos[0] if len(possible_photos) >= 1 else None
@@ -71,7 +72,9 @@ def create(request):
     if request.method == 'GET':
         form = PhotoForm()
     else:
-        form = PhotoForm(request.POST)
+        photo_with_owner = Photo()
+        photo_with_owner.owner = request.user   # asigno como propietario de la foto el usuario autenticado
+        form = PhotoForm(request.POST, instance=photo_with_owner)
         if form.is_valid():
             # Guarda el objeto del formulario en la DB y lo devuelve
             new_photo = form.save()
