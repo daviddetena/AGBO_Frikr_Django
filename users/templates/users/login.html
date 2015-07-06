@@ -11,12 +11,11 @@
 <form method="post">
     <!-- Para que bloquee Django por seguridad contra CSRF -->
     {% csrf_token %}
-    <div>
-        <input type="text" name="usr" placeholder="Nombre de usuario">
-    </div>
-    <div>
-        <input type="password" name="pwd" placeholder="Password">
-    </div>
+    <!-- Llamamos al formulario login_form inyectado en el controlador users/views.py y lo ponemos
+     como tabla -->
+    <table>
+        {{ login_form.as_table }}
+    </table>
     <div>
         <button>Entrar</button>
     </div>
