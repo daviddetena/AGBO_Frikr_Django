@@ -33,7 +33,9 @@ def login(request):
                 if user.is_active:
                     # Activamos sesion
                     django_login(request, user)
-                    return redirect('photos_home')
+                    # next contiene la siguiente pagina a la que navegar. Si no existe, lo manda a photos_home
+                    url = request.GET.get('next', 'photos_home')
+                    return redirect(url)
                 else:
                     error_messages.append('El usuario no está activo')
     else:

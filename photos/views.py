@@ -4,6 +4,7 @@ from django.shortcuts import render
 from photos.models import Photo, PUBLIC
 from photos.forms import PhotoForm
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     """
@@ -58,6 +59,8 @@ def detail(request, pk):
         return HttpResponseNotFound("No existe la foto")
 
 
+# Decorador de Django que automáticamente me redirige a una url si no estoy autenticado
+@login_required()
 def create(request):
     """
     Muestra un formulario para crear una foto y la crea si la petición es POST

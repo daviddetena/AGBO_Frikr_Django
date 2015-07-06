@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 """
 Django settings for frikr project.
 
@@ -121,3 +122,9 @@ LOGGING = {
         },
     }
 }
+
+
+# LOGIN URL
+# Cuando un usuario no esté autenticado le redirige a /login (forma parte de los decoradores,
+# por defecto cogería el suyo, y si no, el que se encuentre en la variable LOGIN_URL de este settings
+LOGIN_URL = '/login'
