@@ -1,0 +1,22 @@
+<!-- heredamos de la plantilla base, pero en el bloque section en base.html
+ incluyo lo que defino aqui dentro del block section -->
+{% extends 'base.html' %}
+{% block title %} Crear una foto {% endblock %}
+{% block section %}
+    <h1>Crear una foto</h1>
+
+    {% if success_message %}
+
+    <!-- safe es para indicarle que es html seguro y que no me lo escape por seguridad -->
+    <span style="color:green">{{ success_message|safe }}</span>
+
+    {% endif %}
+    <form method="post" novalidate>
+        <!-- Para que bloquee Django por seguridad contra CSRF -->
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div>
+            <button>Crear foto</button>
+        </div>
+    </form>
+{% endblock %}

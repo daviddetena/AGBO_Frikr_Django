@@ -2,6 +2,8 @@
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 from photos.models import Photo, PUBLIC
+from photos.forms import PhotoForm
+from django.core.urlresolvers import reverse
 
 def home(request):
     """
@@ -54,3 +56,33 @@ def detail(request, pk):
     else:
         # 404 not found
         return HttpResponseNotFound("No existe la foto")
+
+
+def create(request):
+    """
+    Muestra un formulario para crear una foto y la crea si la petición es POST
+    :param request: HttpRequest
+    :return: HttpResponse
+    """
+    success_message = ''
+    if request.method == 'GET':
+        form = PhotoForm()
+    else:
+        form = PhotoForm(request.POST)
+        if form.is_valid():
+            # Guarda el objeto del formulario en la DB y lo devuelve
+            new_photo = form.save()
+
+            # Inicializamos formulario, con el reverse componemos la url dinámica que mostrará con la nueva
+            # foto
+            form = PhotoForm()
+            success_message = 'Guardado con éxito!'
+            success_message += '<a href="{0}">'.format(reverse('photo_detail', args=[new_photo.pk]))
+            success_message += 'Ver foto'
+            success_message += '</a>'
+    context = {
+        # Pasamos en el context los datos que se mostrarán en el template
+        'form': form,
+        'success_message': success_message
+    }
+    return render(request, 'photos/new_photo.html', context)

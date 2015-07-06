@@ -14,6 +14,7 @@ urlpatterns = [
     # pagina detalle foto, url empieza por /photos/id =>  ^ es inicio cadena, $ es fin cadena
     # ?P<pk> lo captura como parametro llamado 'pk'. [0-9]+ significa un numero 1 o mas veces
     url(r'^photos/(?P<pk>[0-9]+)$', 'photos.views.detail', name='photo_detail'),
+    url(r'^photos/new$', 'photos.views.create', name='create_photo'),
 
     # USERS URLs
     url(r'^login$', 'users.views.login', name='users_login'),
