@@ -1,8 +1,9 @@
 #-*- coding: utf-8 -*-
 from django.conf.urls import include, url
 from django.contrib import admin
-from photos.views import HomeView, DetailView, CreateView, ListView
+from photos.views import HomeView, DetailView, CreateView, PhotoListView, UserPhotosView
 from users.views import LoginView, LogoutView
+from django.contrib.auth.decorators import  login_required
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -17,8 +18,9 @@ urlpatterns = [
     url(r'^$', HomeView.as_view(), name='photos_home'),
 
     # Fotos publicas si no esta autenticado, fotos propias de usuario registrado o publicas, si es
-    # super admin, todas las fotos
-    url(r'^photos/$', ListView.as_view(), name='photos_list'),
+    # super admin, todas las fotos. Protejo contra no autorizados en my-photos
+    url(r'^my-photos/$', login_required(UserPhotosView.as_view()), name='user_photos'),
+    url(r'^photos/$', PhotoListView.as_view(), name='photos_list'),
     # pagina detalle foto, url empieza por /photos/id =>  ^ es inicio cadena, $ es fin cadena
     # ?P<pk> lo captura como parametro llamado 'pk'. [0-9]+ significa un numero 1 o mas veces
     url(r'^photos/(?P<pk>[0-9]+)$', DetailView.as_view(), name='photo_detail'),

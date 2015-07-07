@@ -1,0 +1,8 @@
+<!-- heredamos de la plantilla base, pero en el bloque section en base.html
+ incluyo lo que defino aqui dentro del block section -->
+{% extends 'base.html' %}
+
+{% block section %}
+    <h1>Mis fotos</h1>
+    {% include 'photos/photos_loop.html' with photos_list=object_list %}
+{% endblock %}

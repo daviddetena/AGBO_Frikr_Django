@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.db.models import Q
+from django.views.generic import ListView
 
 # Clase de la que heredaran otras para mostrar fotos en funcion de la autenticacion
 class PhotosQuerySet(object):
@@ -126,7 +127,7 @@ class CreateView(View):
         }
         return render(request, 'photos/new_photo.html', context)
 
-class ListView(View, PhotosQuerySet):
+class PhotoListView(View, PhotosQuerySet):
     def get(self, request):
         """
         Devuelve:
@@ -142,3 +143,16 @@ class ListView(View, PhotosQuerySet):
             'photos': self.get_photos_queryset(request)
         }
         return render(request, 'photos/photos_list.html', context)
+
+class UserPhotosView(ListView):
+    """
+    Clase que hereda de las vistas genericas. Modelo es la foto y le indico la plantilla
+    """
+    model = Photo
+    template_name = 'photos/user_photos.html'
+
+    # Heredado de ListView, filtro del listado con el usuario que me llega del request
+    def get_queryset(self):
+        queryset = super(UserPhotosView, self).get_queryset()
+        return queryset.filter(owner=self.request.user)
+
