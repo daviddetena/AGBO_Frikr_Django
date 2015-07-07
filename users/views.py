@@ -25,7 +25,7 @@ class LoginView(View):
         # Hacemos que el render tenga disponible el contexto con los datos que pasamos de error
         return render(request, 'users/login.html', context)
 
-    def post(request):
+    def post(self, request):
         """
         Comprobamos usuario
         :param request:
@@ -66,9 +66,12 @@ class LoginView(View):
         # Hacemos que el render tenga disponible el contexto con los datos que pasamos de error
         return render(request, 'users/login.html', context)
 
-def logout(request):
-    # Desautenticamos usuario y redirigimos al home
-    if request.user.is_authenticated():
-        # django tiene su propia funcion logout
-        django_logout(request)
-    return redirect('photos_home')
+# Ahora tenemos el controlador basado en clase
+class LogoutView(View):
+
+    def get(self, request):
+        # Desautenticamos usuario y redirigimos al home
+        if request.user.is_authenticated():
+            # django tiene su propia funcion logout
+            django_logout(request)
+        return redirect('photos_home')
