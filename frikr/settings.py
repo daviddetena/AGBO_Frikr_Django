@@ -40,7 +40,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'photos',    #anado app photos a las apps instaladas
     'frikr',
-    'users'
+    'users',
+    'rest_framework'    #incluimos REST framework
 )
 
 MIDDLEWARE_CLASSES = (
