@@ -138,3 +138,10 @@ LICENCES = (
 
 # BADWORDS http://goo.gl/G2nCu7
 PROJECT_BADWORDS = [u'Abollao', u'Abrazafarolas', u'Afilasables', u'Analfabestia', u'Apollardao', u'Arrastramantas']
+
+# REST FRAMEWORK (hacer al principio de toda la aplicación)
+REST_FRAMEWORK = {
+    'PAGINATE_BY': 5,  # 5 items por pagina
+    'PAGINATE_BY_PARAM': 'page_size',   # parametro GET para definir el numero de elementos por pagina
+    'MAX_PAGINATE_BY': 10   # maximo numero de elementos de pagina
+}
