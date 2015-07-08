@@ -6,6 +6,10 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 
+"""
+Aquí ponemos todos los endpoints que el cliente REST solicitará
+"""
+
 class UserListAPI(APIView):
 
     def get(self, request):
@@ -48,3 +52,20 @@ class UserDetailAPI(APIView):
         user = get_object_or_404(User, pk=pk)
         serializer = UserSerializer(user)
         return Response(serializer.data)
+
+    def put(self, request, pk):
+        """
+        Comprobamos si existe el usuario y actualizamos los datos. UserSerializer en este caso
+        llamaría al método update del Serializer, ya que es el que recibe una instancia y también
+        el validated_data
+        :param request:
+        :param pk: Parámetro con el pk del usuario
+        :return: Si existe devuelve el objeto actualizado, si no devuelve un 404
+        """
+        user = get_object_or_404(User, pk=pk)
+        serializer = UserSerializer(instance=user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
