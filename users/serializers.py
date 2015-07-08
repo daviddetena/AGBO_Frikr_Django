@@ -15,6 +15,7 @@ class UserSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         """
+        Método create sobreescrito del Serializer.
         Crea una instancia User a partir de los datos de validated data, que contiene valores deserializados
         :param validated_data: Diccionario con datos de usuario
         :return: objeto User
@@ -25,6 +26,7 @@ class UserSerializer(serializers.Serializer):
 
     def update(self, instance, validated_data):
         """
+        Método update sobreescrito del Serializer.
         Actualiza instancia de User a partir de los datos del diccionario validated_data que contiene
         valores deserializados
         :param validated_data: Diccionario con datos de usuario

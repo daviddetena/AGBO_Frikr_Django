@@ -62,6 +62,7 @@ class UserDetailAPI(APIView):
         :param pk: Parámetro con el pk del usuario
         :return: Si existe devuelve el objeto actualizado, si no devuelve un 404
         """
+        # Obtenemos user
         user = get_object_or_404(User, pk=pk)
         serializer = UserSerializer(instance=user, data=request.data)
         if serializer.is_valid():
@@ -69,3 +70,14 @@ class UserDetailAPI(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        """
+         Comprobamos si existe el usuario y eliminamos los datos.
+        :param request:
+        :param pk:
+        :return: Nada
+        """
+        user = get_object_or_404(User, pk=pk)
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
