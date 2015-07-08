@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class UserSerializer(serializers.Serializer):
 
     # Definimos campos que queremos que se muestren cuando se envien/devuelven datos por http
-    id = serializers.ReadOnlyField      # id es de solo lectura
+    id = serializers.ReadOnlyField()      # id es de solo lectura
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     username = serializers.CharField()
@@ -39,3 +39,16 @@ class UserSerializer(serializers.Serializer):
         # Guardamos en DB
         instance.save()
         return instance
+
+    def validate_username(self, data):
+        """
+        Todos los metodos de validacion deben ser del tipo validate_<nombre_campo>
+        Valida si existe un usuario con ese username
+        :param data:
+        :return:
+        """
+        users = User.objects.filter(username=data)
+        if len(users) != 0:
+            raise serializers.ValidationError("Ya existe un usuario con ese username")
+        else:
+            return data
