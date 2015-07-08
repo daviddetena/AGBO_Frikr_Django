@@ -1,19 +1,19 @@
 #-*- coding: utf-8 -*-
 from models import Photo
 from photos.serializers import PhotoSerializer
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from rest_framework import status
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
-class PhotoListAPI(APIView):
+"""
+Heredamos de vistas genericas. Solo necesitamos indicarle el modelo del queryset y el serializer
+para que automaticamente haga el metodo POST al api
+"""
+# get, post
+class PhotoListAPI(ListCreateAPIView):
+    queryset = Photo.objects.all()
+    serializer_class = PhotoSerializer
 
-    def get(self, request):
-        """
-        Devolvemos todas las fotos
-        :param request:
-        :return:
-        """
-        photos = Photo.objects.all()
-        serializer = PhotoSerializer(photos, many=True)
-        return Response(serializer.data)
+# get, put, delete
+class PhotoDetailAPI(RetrieveUpdateDestroyAPIView):
+    queryset = Photo.objects.all()
+    serializer_class = PhotoSerializer
+
