@@ -21,7 +21,6 @@ class PhotoListAPI(ListCreateAPIView):
         return PhotoSerializer if self.request.method == "POST" else PhotoListSerializer
 
 
-
 # get, put, delete
 class PhotoDetailAPI(RetrieveUpdateDestroyAPIView):
     queryset = Photo.objects.all()
