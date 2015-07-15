@@ -31,10 +31,15 @@ class PhotoListAPI(PhotosQuerySet, ListCreateAPIView):
 
     def get_queryset(self):
         """
-        Heredamos el método de photos.views.py para asignar las autorizaciones dinámicamente
+        Heredamos el método de photos.views.py para asignar las autorizaciones dinámicamente que contiene dicha clase
         :return:
         """
         return self.get_photos_queryset(self.request)
+
+    # Sobreescribimos perform_create para que al llamar a serializer.save(), coja el usuario autenticado como el
+    # propietario de la nueva foto
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 # get, put, delete
 class PhotoDetailAPI(PhotosQuerySet, RetrieveUpdateDestroyAPIView):
