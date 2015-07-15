@@ -2,7 +2,7 @@
 from django.contrib.auth.models import User
 from users.serializers import UserSerializer
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 
@@ -10,8 +10,11 @@ from rest_framework import status
 Aquí ponemos todos los endpoints que el cliente REST solicitará
 """
 
-class UserListAPI(APIView):
-
+class UserListAPI(GenericAPIView):
+    """
+    Heredamos ahora de GenericAPIView para que haga otras tareas inteligentes, como paginación o autenticación
+    y autorización basada en clases
+    """
     def get(self, request):
         """
         Queremos devolver todos los usuarios del sistema
@@ -40,7 +43,11 @@ class UserListAPI(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserDetailAPI(APIView):
+class UserDetailAPI(GenericAPIView):
+    """
+    Heredamos ahora de GenericAPIView para que haga otras tareas inteligentes, como paginación o autenticación
+    y autorización basada en clases
+    """
 
     def get(self, request, pk):
         """

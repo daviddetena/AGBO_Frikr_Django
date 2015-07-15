@@ -2,14 +2,23 @@
 from models import Photo
 from photos.serializers import PhotoSerializer, PhotoListSerializer
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from photos.views import PhotosQuerySet
+
+# TO-DO: implementar una nueva clase con la información que comparten PhotoListAPI y PhotoDetailAPI
+# y hacer que estas dos hereden de la nueva, la cual heredará de PhotosQuerySet
+
 
 """
 Heredamos de vistas genericas. Solo necesitamos indicarle el modelo del queryset y el serializer
-para que automaticamente haga el metodo POST al api
+para que automaticamente haga el metodo POST al api. Heredamos tambíen de photos.view para generar
+las autorizaciones utilizando el método get_photos_queryset ya definido
 """
 # get, post
-class PhotoListAPI(ListCreateAPIView):
+class PhotoListAPI(PhotosQuerySet, ListCreateAPIView):
     queryset = Photo.objects.all()
+    # Permisos de lectura para todos y de añadir/escribir/eliminar sólo para autenticados
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get_serializer_class(self):
         """
@@ -20,9 +29,24 @@ class PhotoListAPI(ListCreateAPIView):
         """
         return PhotoSerializer if self.request.method == "POST" else PhotoListSerializer
 
+    def get_queryset(self):
+        """
+        Heredamos el método de photos.views.py para asignar las autorizaciones dinámicamente
+        :return:
+        """
+        return self.get_photos_queryset(self.request)
 
 # get, put, delete
-class PhotoDetailAPI(RetrieveUpdateDestroyAPIView):
+class PhotoDetailAPI(PhotosQuerySet, RetrieveUpdateDestroyAPIView):
     queryset = Photo.objects.all()
     serializer_class = PhotoSerializer
+    # Permisos de lectura para todos y de añadir/escribir/eliminar sólo para autenticados
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def get_queryset(self):
+        """
+        Heredamos el método de photos.views.py para asignar las autorizaciones dinámicamente
+        :return:
+        """
+        return self.get_photos_queryset(self.request)
 

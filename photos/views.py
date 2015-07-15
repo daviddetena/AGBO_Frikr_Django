@@ -66,7 +66,7 @@ class DetailView(View, PhotosQuerySet):
         # con .prefetch_related() obtendriamos la inversa: obteniendo un owner, traer sus fotos de golpe
         possible_photos = self.get_photos_queryset(request).filter(pk=pk).select_related('owner')
 
-        # photo = (possible_photos.length ==1) ? possible_photos[0] : null;
+        # photo = (possible_photos.length ==1) ? possible_photos[0] : null; En teoría solo debería haber 1
         photo = possible_photos[0] if len(possible_photos) >= 1 else None
 
         if photo is not None:
