@@ -5,12 +5,20 @@ from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 from django.shortcuts import get_object_or_404
 from rest_framework import status
+from users.permissions import UserPermission
+
 
 """
-Aquí ponemos todos los endpoints que el cliente REST solicitará
+Aquí ponemos todos los endpoints que el cliente REST solicitará.
+En las clases de detalle donde implemento GET, PUT y DELETE a mano tengo que comprobar manualmente si el usuario puede
+hacer lo que quiere hacer sobre el objeto indicado
 """
 
 class UserListAPI(GenericAPIView):
+
+    # Aplicamos nuestra propia clase de permisos
+    permission_classes = (UserPermission,)
+
     """
     Heredamos ahora de GenericAPIView para que haga otras tareas inteligentes, como paginación o autenticación
     y autorización basada en clases
@@ -48,6 +56,7 @@ class UserDetailAPI(GenericAPIView):
     Heredamos ahora de GenericAPIView para que haga otras tareas inteligentes, como paginación o autenticación
     y autorización basada en clases
     """
+    permission_classes = (UserPermission,)
 
     def get(self, request, pk):
         """
@@ -57,6 +66,8 @@ class UserDetailAPI(GenericAPIView):
         :return: Si existe devuelve el objeto, si no devuelve un 404
         """
         user = get_object_or_404(User, pk=pk)
+        #compruebo si el usuario autenticado puede hacer GET en este user, al recoger el objeto concreto manualmente
+        self.check_object_permissions(request, user)
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
@@ -71,6 +82,8 @@ class UserDetailAPI(GenericAPIView):
         """
         # Obtenemos user
         user = get_object_or_404(User, pk=pk)
+        #compruebo si el usuario autenticado puede hacer PUT en este user, al recoger el objeto concreto manualmente
+        self.check_object_permissions(request, user)
         serializer = UserSerializer(instance=user, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -86,5 +99,7 @@ class UserDetailAPI(GenericAPIView):
         :return: Nada
         """
         user = get_object_or_404(User, pk=pk)
+        #compruebo si el usuario autenticado puede hacer DELETE en este user, al recoger el objeto concreto manualmente
+        self.check_object_permissions(request, user)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

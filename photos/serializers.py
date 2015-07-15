@@ -5,6 +5,7 @@ from models import Photo
 class PhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Photo
+        # POST
         # Indicamos que el campo owner será de sólo lectura, para que no sea obligatorio incluirlo
         # para crear una nueva foto (ya que cogerá el usuario autenticado definido en la api), pero
         # sí para que me aparezca como respuesta. tupla read_only_fields(). Funciona para post (esta
